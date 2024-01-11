@@ -1,0 +1,33 @@
+Package: prioritized-group-assignment
+Title: Group assignments based on participant prioritization
+Version: 24.1.1
+Authors@R: 
+    person("Andreas Gammelgaard", "Damsbo", , "agdamsbo@clin.au.dk", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7559-1154"))
+Description: Supply group
+License: GPL (>= 3)
+Imports: 
+    dplyr,
+    ggplot2,
+    magrittr,
+    ompr,
+    ompr.roi,
+    openxlsx,
+    patchwork,
+    renv,
+    ROI,
+    ROI.plugin.symphony,
+    shiny,
+    tidyr,
+    viridisLite,
+    shinylive,
+    httpuv,
+    here,
+    shiny,
+    cpp11
+Suggests:
+    pak,
+    usethis
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.0
