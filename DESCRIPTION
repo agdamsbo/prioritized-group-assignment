@@ -24,7 +24,8 @@ Imports:
     httpuv,
     here,
     shiny,
-    cpp11
+    cpp11,
+    ROI.plugin.alabama
 Suggests:
     pak,
     usethis

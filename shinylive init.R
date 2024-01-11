@@ -1,3 +1,8 @@
-shinylive::export("R", "docs")
+# Typical shiny
+shiny::runApp(appDir = here::here("R/"),launch.browser = TRUE)
 
-httpuv::runStaticServer("docs")
+
+# Shinylive version
+shinylive::export(appdir = "R", destdir = "docs")
+
+httpuv::runStaticServer(dir = "docs")

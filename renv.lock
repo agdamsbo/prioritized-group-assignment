@@ -76,6 +76,20 @@
       ],
       "Hash": "42ce9ee4c1cf168869f4386d2cdeadd2"
     },
+    "ROI.plugin.alabama": {
+      "Package": "ROI.plugin.alabama",
+      "Version": "1.0-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "ROI",
+        "alabama",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "097f1b625baf91f0d8999a1385054250"
+    },
     "ROI.plugin.symphony": {
       "Package": "ROI.plugin.symphony",
       "Version": "1.0-0",
@@ -109,6 +123,17 @@
         "R"
       ],
       "Hash": "3f55239fe534fe91e739c77d99a4ffbf"
+    },
+    "alabama": {
+      "Package": "alabama",
+      "Version": "2023.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "numDeriv"
+      ],
+      "Hash": "593db7eb170506e6b61ca0c803201924"
     },
     "archive": {
       "Package": "archive",
@@ -691,6 +716,16 @@
         "utils"
       ],
       "Hash": "a623a2239e642806158bc4dc3f51565d"
+    },
+    "numDeriv": {
+      "Package": "numDeriv",
+      "Version": "2016.8-1.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "df58958f293b166e4ab885ebcad90e02"
     },
     "ompr": {
       "Package": "ompr",
