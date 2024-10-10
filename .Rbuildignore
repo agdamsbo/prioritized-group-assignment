@@ -3,3 +3,10 @@
 ^LICENSE\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^CODE_OF_CONDUCT\.md$
+^app/
+^publish_shiny.R
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

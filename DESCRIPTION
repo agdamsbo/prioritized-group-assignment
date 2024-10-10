@@ -1,10 +1,14 @@
-Package: prioritized-group-assignment
-Title: Group assignments based on participant prioritization
-Version: 24.1.1
+Package: prioritized.grouping
+Title: Group allocation based on individual subject prioritization
+Version: 24.10.1
 Authors@R: 
-    person("Andreas Gammelgaard", "Damsbo", , "agdamsbo@clin.au.dk", role = c("aut", "cre"),
+    person("Andreas Gammelgaard", "Damsbo", , "andreas@gdamsbo.dk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7559-1154"))
-Description: Supply group
+Description:
+    Apply algorithmic grouping based on individual pritisations/costs, with the 
+    option to allow for the so-called "pedagogical redraw", where some subjects 
+    are manually grouped in consideration of other factors than only the 
+    given priorities before the algorithmic grouping.
 License: GPL (>= 3)
 Imports: 
     dplyr,
@@ -23,12 +27,17 @@ Imports:
     shinylive,
     httpuv,
     here,
-    shiny,
     cpp11,
-    ROI.plugin.alabama
+    ROI.plugin.alabama,
+    assertthat,
+    readODS
 Suggests:
     pak,
-    usethis
+    usethis,
+    styler,
+    roxygen2,
+    devtools
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.0
+RoxygenNote: 7.3.2
+URL: https://agdamsbo.github.io/prioritized.grouping/
