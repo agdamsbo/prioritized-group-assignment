@@ -25,6 +25,9 @@ utils::globalVariables(c("group", "grp", "i", "j", "value"))
 
 
 
+
+
+
 prioritized_grouping <-
   function(data,
            cap_classes = NULL,
@@ -197,7 +200,7 @@ prioritized_grouping <-
 
     class(out) <- c("prioritized_groups_list", class(out))
 
-    return(out)
+    invisible(out)
   }
 
 
@@ -223,8 +226,11 @@ prioritized_grouping <-
 
 
 
+
+
+
 grouping_plot <- function(data,
-                          columns = NULL,
+                          columns = 4,
                           overall = FALSE,
                           viridis.option="D",
                           viridis.direction=-1) {
@@ -302,8 +308,9 @@ grouping_plot <- function(data,
 
 
 
-plot.prioritized_groups_list <- function(data, ...) {
-  grouping_plot(data, ...)
+
+plot.prioritized_groups_list <- function(x, ...) {
+  grouping_plot(x, ...)
 }
 
 ## Helper function for Shiny
@@ -344,8 +351,6 @@ read_input <- function(file, consider.na = c("NA", '""', "")) {
         df <- utils::read.csv(file = file, na = consider.na)
       } else if (ext %in% c("xls", "xlsx")) {
         df <- openxlsx2::read_xlsx(file = file, na.strings = consider.na)
-      } else if (ext == "dta") {
-        df <- haven::read_dta(file = file)
       } else if (ext == "ods") {
         df <- readODS::read_ods(file = file)
       } else {
