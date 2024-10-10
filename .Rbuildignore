@@ -6,7 +6,10 @@
 ^CODE_OF_CONDUCT\.md$
 ^app/
 ^publish_shiny.R
+^publish_cran.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^\.github$
+^data/prioritized_sample\.xlsx$
+^sample_data$

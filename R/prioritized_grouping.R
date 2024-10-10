@@ -16,9 +16,12 @@ utils::globalVariables(c("group", "grp", "i", "j", "value"))
 #' @export
 #'
 #' @examples
-#' prioritized_grouping(
-#' data=read.csv(here::here("data/prioritized_sample.csv")),
-#' pre_grouped=read.csv(here::here("data/pre_grouped.csv"))) |> plot()
+#' # prioritized_grouping(
+#' # data=read.csv(here::here("data/prioritized_sample.csv")),
+#' # pre_grouped=read.csv(here::here("data/pre_grouped.csv"))) |> plot()
+#' data.frame(id=paste0("id",1:100),
+#' matrix(replicate(100,sample(c(1:5,rep(NA,15)),10)),ncol=10,byrow = TRUE)) |>
+#' prioritized_grouping()
 prioritized_grouping <-
   function(data,
            cap_classes = NULL,
@@ -191,7 +194,7 @@ prioritized_grouping <-
 
     class(out) <- c("prioritized_groups_list", class(out))
 
-    return(out)
+    invisible(out)
   }
 
 #' Assessment performance overview
@@ -203,7 +206,7 @@ prioritized_grouping <-
 #'
 #' @param data A "prioritized_groups_list" class list from
 #' 'prioritized_grouping()'
-#' @param columns number of columns in plot
+#' @param columns number of columns in plot. Default=4.
 #' @param overall logical to only print overall groups mean priority/cost
 #' @param viridis.option option value passed on to 'viridisLite::viridis'.
 #' Default="D".
@@ -217,8 +220,11 @@ prioritized_grouping <-
 #' #read.csv(here::here("data/prioritized_sample.csv")) |>
 #' #  prioritized_grouping(cap_classes = sample(4:12, 17, TRUE)) |>
 #' #  grouping_plot()
+#' data.frame(id=paste0("id",1:100),
+#' matrix(replicate(100,sample(c(1:5,rep(NA,15)),10)),ncol=10,byrow = TRUE)) |>
+#' prioritized_grouping() |> grouping_plot(overall=TRUE)
 grouping_plot <- function(data,
-                          columns = NULL,
+                          columns = 4,
                           overall = FALSE,
                           viridis.option="D",
                           viridis.direction=-1) {
@@ -286,18 +292,19 @@ grouping_plot <- function(data,
 
 #' Plot extension for easy groupings plot
 #'
-#' @param data data of class 'prioritized_groups_list'
+#' @param x data of class 'prioritized_groups_list'
 #' @param ... passed on to 'grouping_plot()'
 #'
 #' @return ggplot2 list object
 #' @export
 #'
 #' @examples
-#' read.csv(here::here("data/prioritized_sample.csv")) |>
-#'   prioritized_grouping() |>
-#'   plot(overall = TRUE, viridis.option="D",viridis.direction=-1)
-plot.prioritized_groups_list <- function(data, ...) {
-  grouping_plot(data, ...)
+#' # read.csv(here::here("data/prioritized_sample.csv")) |>
+#' #   prioritized_grouping() |>
+#' #   plot(overall = TRUE, viridis.option="D",viridis.direction=-1)
+#'
+plot.prioritized_groups_list <- function(x, ...) {
+  grouping_plot(x, ...)
 }
 
 ## Helper function for Shiny
@@ -316,4 +323,40 @@ file_extension <- function(filenames) {
     replacement = "",
     filenames, perl = TRUE
   )
+}
+
+
+#' Flexible file import based on extension
+#'
+#' @param file file name
+#' @param consider.na character vector of strings to consider as NAs
+#'
+#' @return tibble
+#' @export
+#'
+#' @examples
+#' read_input("https://raw.githubusercontent.com/agdamsbo/cognitive.index.lookup/main/data/sample.csv")
+read_input <- function(file, consider.na = c("NA", '""', "")) {
+  ext <- file_extension(file)
+
+  tryCatch(
+    {
+      if (ext == "csv") {
+        df <- utils::read.csv(file = file, na = consider.na)
+      } else if (ext %in% c("xls", "xlsx")) {
+        df <- openxlsx2::read_xlsx(file = file, na.strings = consider.na)
+      } else if (ext == "ods") {
+        df <- readODS::read_ods(file = file)
+      } else {
+        stop("Input file format has to be on of:
+             '.csv', '.xls', '.xlsx', '.dta' or '.ods'")
+      }
+    },
+    error = function(e) {
+      # return a safeError if a parsing error occurs
+      stop(shiny::safeError(e))
+    }
+  )
+
+  df
 }

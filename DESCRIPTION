@@ -13,30 +13,27 @@ License: GPL (>= 3)
 Imports: 
     dplyr,
     ggplot2,
-    magrittr,
     ompr,
     ompr.roi,
-    openxlsx,
+    openxlsx2,
     patchwork,
-    renv,
-    ROI,
-    ROI.plugin.symphony,
     shiny,
-    tidyr,
     viridisLite,
-    shinylive,
-    httpuv,
-    here,
-    cpp11,
-    ROI.plugin.alabama,
     assertthat,
-    readODS
+    readODS,
+    tibble
 Suggests:
     pak,
     usethis,
     styler,
     roxygen2,
-    devtools
+    devtools,
+    rhub,
+    here,
+    cpp11,
+    renv,
+    ROI,
+    ROI.plugin.symphony
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

@@ -34,7 +34,10 @@ list of custom class 'prioritized_groups_list'
 Solve grouping based on priorities or costs.
 }
 \examples{
-prioritized_grouping(
-data=read.csv(here::here("data/prioritized_sample.csv")),
-pre_grouped=read.csv(here::here("data/pre_grouped.csv"))) |> plot()
+# prioritized_grouping(
+# data=read.csv(here::here("data/prioritized_sample.csv")),
+# pre_grouped=read.csv(here::here("data/pre_grouped.csv"))) |> plot()
+data.frame(id=paste0("id",1:100),
+matrix(replicate(100,sample(c(1:5,rep(NA,15)),10)),ncol=10,byrow = TRUE)) |>
+prioritized_grouping()
 }

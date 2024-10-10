@@ -6,7 +6,7 @@
 \usage{
 grouping_plot(
   data,
-  columns = NULL,
+  columns = 4,
   overall = FALSE,
   viridis.option = "D",
   viridis.direction = -1
@@ -16,7 +16,7 @@ grouping_plot(
 \item{data}{A "prioritized_groups_list" class list from
 'prioritized_grouping()'}
 
-\item{columns}{number of columns in plot}
+\item{columns}{number of columns in plot. Default=4.}
 
 \item{overall}{logical to only print overall groups mean priority/cost}
 
@@ -39,4 +39,7 @@ in the group.
 #read.csv(here::here("data/prioritized_sample.csv")) |>
 #  prioritized_grouping(cap_classes = sample(4:12, 17, TRUE)) |>
 #  grouping_plot()
+data.frame(id=paste0("id",1:100),
+matrix(replicate(100,sample(c(1:5,rep(NA,15)),10)),ncol=10,byrow = TRUE)) |>
+prioritized_grouping() |> grouping_plot(overall=TRUE)
 }

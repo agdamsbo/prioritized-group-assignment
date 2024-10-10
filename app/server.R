@@ -325,6 +325,44 @@ file_extension <- function(filenames) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+read_input <- function(file, consider.na = c("NA", '""', "")) {
+  ext <- file_extension(file)
+
+  tryCatch(
+    {
+      if (ext == "csv") {
+        df <- utils::read.csv(file = file, na = consider.na)
+      } else if (ext %in% c("xls", "xlsx")) {
+        df <- openxlsx2::read_xlsx(file = file, na.strings = consider.na)
+      } else if (ext == "dta") {
+        df <- haven::read_dta(file = file)
+      } else if (ext == "ods") {
+        df <- readODS::read_ods(file = file)
+      } else {
+        stop("Input file format has to be on of:
+             '.csv', '.xls', '.xlsx', '.dta' or '.ods'")
+      }
+    },
+    error = function(e) {
+      # return a safeError if a parsing error occurs
+      stop(shiny::safeError(e))
+    }
+  )
+
+  df
+}
+
+
 ########
 #### Current file: app/server_raw.R 
 ########
@@ -341,27 +379,7 @@ server <- function(input, output, session) {
 
     req(input$file1)
     # Make laoding dependent of file name extension (file_ext())
-    ext <- file_extension(input$file1$datapath)
-
-    tryCatch(
-      {
-        if (ext == "csv") {
-          df <- utils::read.csv(input$file1$datapath,na.strings = c("NA", '""',""))
-        } else if (ext %in% c("xls", "xlsx")) {
-          df <- openxlsx::read.xlsx(input$file1$datapath,na.strings = c("NA", '""',""))
-        } else if (ext == "ods") {
-          df <- readODS::read_ods(file = file)
-        } else {
-          stop("Input file format has to be on of:
-             '.csv', '.xls', '.xlsx' or '.ods'")
-        }
-      },
-      error = function(e) {
-        # return a safeError if a parsing error occurs
-        stop(safeError(e))
-      }
-    )
-
+    df <- read_input(input$file1$datapath)
     return(df)
   })
 
@@ -370,18 +388,7 @@ server <- function(input, output, session) {
     # req(input$file2)
     # Make laoding dependent of file name extension (file_ext())
     if (!is.null(input$file2$datapath)){
-      ext <- file_extension(input$file2$datapath)
-
-      if (ext == "csv") {
-        df <- utils::read.csv(input$file2$datapath,na.strings = c("NA", '""',""))
-      } else if (ext %in% c("xls", "xlsx")) {
-        df <- openxlsx::read.xlsx(input$file2$datapath,na.strings = c("NA", '""',""))
-      } else if (ext == "ods") {
-        df <- readODS::read_ods(file = file)
-      } else {
-        stop("Input file format has to be on of:
-             '.csv', '.xls', '.xlsx' or '.ods'")
-      }
+      df <- read_input(input$file2$datapath)
 
       return(df)
     } else {

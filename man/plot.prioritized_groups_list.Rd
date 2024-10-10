@@ -4,10 +4,10 @@
 \alias{plot.prioritized_groups_list}
 \title{Plot extension for easy groupings plot}
 \usage{
-\method{plot}{prioritized_groups_list}(data, ...)
+\method{plot}{prioritized_groups_list}(x, ...)
 }
 \arguments{
-\item{data}{data of class 'prioritized_groups_list'}
+\item{x}{data of class 'prioritized_groups_list'}
 
 \item{...}{passed on to 'grouping_plot()'}
 }
@@ -18,7 +18,8 @@ ggplot2 list object
 Plot extension for easy groupings plot
 }
 \examples{
-read.csv(here::here("data/prioritized_sample.csv")) |>
-  prioritized_grouping() |>
-  plot(overall = TRUE, viridis.option="D",viridis.direction=-1)
+# read.csv(here::here("data/prioritized_sample.csv")) |>
+#   prioritized_grouping() |>
+#   plot(overall = TRUE, viridis.option="D",viridis.direction=-1)
+
 }
