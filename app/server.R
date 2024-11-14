@@ -1,6 +1,113 @@
 
 
 ########
+#### Current file: R//parse_formats.R 
+########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+parse_prio_form <- function(data, id = 1, prio.cols,sort.cols=FALSE) {
+  if (is.character(prio.cols)) {
+    grp.index <- match(prio.cols, names(data))
+  } else {
+    grp.index <- prio.cols
+  }
+
+  if (sort.cols){
+    prio.cols <- sort(prio.cols)
+  }
+
+  new.names <- names(data)
+  new.names[grp.index] <- seq_along(grp.index)
+
+  data <- setNames(data, new.names)
+
+  out <- split(data, seq_len(nrow(data))) |>
+    lapply(\(.x){
+      # browser()
+
+      out <- as.data.frame(matrix(c(as.character(.x[[id]]), colnames(.x)[grp.index]), nrow = 1))
+      setNames(out, c(
+        "id",
+        # names(.x[id]),
+        unname(unlist(.x[grp.index]))
+      ))
+    }) |>
+    dplyr::bind_rows() |>
+    dplyr::mutate(dplyr::across(-1, as.integer))
+
+  # Sorting is not really needed, but a nice touch
+  out[c(names(out)[1], sort(names(out)[-1]))]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+parse_string_form <- function(data, id = 1, string.col,pattern=NULL) {
+  if (is.null(pattern)){
+    pattern <- ";"
+  }
+
+  if (length(string.col) != 1) {
+    stop("string.col is required, and has to have length 1")
+  }
+  if (is.character(string.col)) {
+    string.index <- match(string.col, names(data))
+  } else {
+    string.index <- string.col
+  }
+
+  # Cells with NAs are excluded.
+  # NAs happen if the priorities are not edited upon form submission, but a
+  # default order can not be guessed reliably if group naming is not ordered
+  # (like group N, group N+1...)
+  out <- data.frame(data[[id]], data[[string.index]]) |>
+    na.omit() |>
+    (\(.d){
+      split(.d, seq_len(nrow(.d)))
+    })() |>
+    lapply(\(.x){
+      grps <- unlist(strsplit(x=.x[[2]],split=pattern))
+      out <- as.data.frame(matrix(c(.x[[1]], seq_along(grps)), nrow = 1))
+      setNames(
+        out,
+        c("id", grps)
+      )
+    }) |>
+    dplyr::bind_rows()
+
+  # Sorting is not really needed, but a nice touch
+  out[c(names(out)[1], sort(names(out)[-1]))]
+}
+
+
+########
 #### Current file: R//prioritized_grouping.R 
 ########
 
@@ -43,6 +150,11 @@ prioritized_grouping <-
       stop("Supplied data has to be a data frame, with each row
            are subjects and columns are groups, with the first column being
            subject identifiers")
+    }
+
+    # Converts tibble to data.frame
+    if ("tbl_df" %in% class(data)){
+      data <- as.data.frame(data)
     }
 
     ## This program very much trust the user to supply correctly formatted data
@@ -368,6 +480,7 @@ read_input <- function(file, consider.na = c("NA", '""', "")) {
 }
 
 
+
 ########
 #### Current file: app/server_raw.R 
 ########
@@ -377,6 +490,11 @@ server <- function(input, output, session) {
   # source("https://git.nikohuru.dk/au-phd/PhysicalActivityandStrokeOutcome/raw/branch/main/side%20projects/assignment.R")
   # source(here::here("R/group_assign.R"))
 
+  v <- shiny::reactiveValues(
+    ds = NULL,
+    pre = NULL
+  )
+
   dat <- reactive({
     # input$file1 will be NULL initially. After the user selects
     # and uploads a file, head of that data file by default,
@@ -384,28 +502,95 @@ server <- function(input, output, session) {
 
     req(input$file1)
     # Make laoding dependent of file name extension (file_ext())
-    df <- read_input(input$file1$datapath)
-    return(df)
+    out <- read_input(input$file1$datapath)
+    v$ds <- "loaded"
+    return(out)
+  })
+
+  dat_parsed <- reactive({
+    req(input$file1)
+    if (input$input_type == "default") {
+      out <- dat()
+    } else if (input$input_type == "prio") {
+      req(input$id_var_prio)
+      req(input$prio_vars)
+
+      out <- parse_prio_form(
+        data = dat(),
+        id = input$id_var_prio,
+        prio.cols = input$prio_vars
+      )
+    } else if (input$input_type == "string") {
+      req(input$id_var_string)
+      req(input$string_var)
+
+      out <- parse_string_form(
+        data = dat(),
+        id = input$id_var_string,
+        string.col = input$string_var,
+        pattern = input$string_split
+      )
+    }
+    return(out)
+  })
+
+
+  output$id_var_prio <- shiny::renderUI({
+    selectInput(
+      inputId = "id_var_prio",
+      selected = 1,
+      label = "ID column",
+      choices = colnames(dat()),
+      multiple = FALSE
+    )
+  })
+
+  output$id_var_string <- shiny::renderUI({
+    selectInput(
+      inputId = "id_var_string",
+      selected = 1,
+      label = "ID column",
+      choices = colnames(dat()),
+      multiple = FALSE
+    )
+  })
+
+  output$prio_vars <- shiny::renderUI({
+    selectizeInput(
+      inputId = "prio_vars",
+      selected = NULL,
+      label = "Priority columns (select from first to lowest)",
+      choices = colnames(dat())[-match(input$id_var_prio, colnames(dat()))],
+      multiple = TRUE
+    )
+  })
+
+  output$string_var <- shiny::renderUI({
+    selectizeInput(
+      inputId = "string_var",
+      selected = NULL,
+      label = "Column of strings",
+      choices = colnames(dat())[-match(input$id_var_string, colnames(dat()))],
+      multiple = FALSE
+    )
   })
 
   dat_pre <- reactive({
-
     # req(input$file2)
     # Make laoding dependent of file name extension (file_ext())
-    if (!is.null(input$file2$datapath)){
-      df <- read_input(input$file2$datapath)
-
-      return(df)
+    if (!is.null(input$file2$datapath)) {
+      out <- read_input(input$file2$datapath)
     } else {
-      return(NULL)
+      out <- NULL
     }
-
+    v$pre <- "loaded"
+    return(out)
   })
 
   groups <-
     reactive({
       grouped <- prioritized_grouping(
-        data = dat(),
+        data = dat_parsed(),
         excess_space = input$excess,
         pre_grouped = dat_pre()
       )
@@ -415,9 +600,10 @@ server <- function(input, output, session) {
 
   plot.overall <- reactive({
     dplyr::case_match(input$overall.plot,
-                      "yes"~TRUE,
-                      "no"~FALSE,
-                      .default=NULL)
+      "yes" ~ TRUE,
+      "no" ~ FALSE,
+      .default = NULL
+    )
   })
 
   output$raw.data.tbl <- renderTable({
@@ -432,17 +618,39 @@ server <- function(input, output, session) {
     dat()
   })
 
-  output$groups.plt <- renderPlot({
-    grouping_plot(groups(),overall = plot.overall())
+  output$input_parsed <- renderTable({
+    dat_parsed()
   })
+
+  output$groups.plt <- renderPlot({
+    grouping_plot(groups(), overall = plot.overall())
+  })
+
+
+  output$uploaded <- shiny::reactive({
+    if (is.null(v$ds)) {
+      "no"
+    } else {
+      "yes"
+    }
+  })
+
+  output$pre_assigned <- shiny::reactive({
+    if (is.null(v$pre)) {
+      "no"
+    } else {
+      "yes"
+    }
+  })
+
+  shiny::outputOptions(output, "uploaded", suspendWhenHidden = FALSE)
+  shiny::outputOptions(output, "pre_assigned", suspendWhenHidden = FALSE)
 
   # Downloadable csv of selected dataset ----
   output$downloadData <- downloadHandler(
-    filename = "prioritized_grouping.csv",
-
+    filename = "prioritized_grouping.ods",
     content = function(file) {
-      write.csv(groups()$export, file, row.names = FALSE)
+      readODS::write_ods(as.data.frame(groups()$export), file)
     }
   )
-
 }

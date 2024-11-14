@@ -13,7 +13,7 @@ prioritized_grouping(
 )
 }
 \arguments{
-\item{data}{data set in wide format. First column should bi ID, then one column
+\item{data}{data set in wide format. First column should be ID, then one column
 for each group containing cost/priorities.}
 
 \item{cap_classes}{class capacity. Numeric vector length 1 or length=number

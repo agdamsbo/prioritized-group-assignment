@@ -3,5 +3,7 @@
 S3method(plot,prioritized_groups_list)
 export(file_extension)
 export(grouping_plot)
+export(parse_prio_form)
+export(parse_string_form)
 export(prioritized_grouping)
 export(read_input)

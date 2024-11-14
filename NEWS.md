@@ -1,8 +1,22 @@
+## Version 24.10.2
+
+Working to allow direct import of online form results
+
+* NEW: `prio2groups()` is a helper function to widen and format to apply with
+valid format for `prioritized_grouping()` when importing the spreadsheet.
+
+Wish list of supported platforms:
+
+- Google Forms [WIP]
+- Teams
+- REDCap Survey
+
+
 ## Version 24.10.1
 
 First proper public version. The package is mainly build for an easy to use 
 shiny-interface, but can as easily be used directly in *R* with the main 
-`prioritized_grouping` function. This function is mainly a wrapper around the `ROI`
+`prioritized_grouping()` function. This function is mainly a wrapper around the `ROI`
 package and the `ROI.plugin.symphony` plugin. 
 
 File types accepted in the shiny-app are .csv, .xls(x) and .ods.

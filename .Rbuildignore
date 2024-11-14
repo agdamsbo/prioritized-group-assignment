@@ -13,3 +13,4 @@
 ^\.github$
 ^data/prioritized_sample\.xlsx$
 ^sample_data$
+^drafting$

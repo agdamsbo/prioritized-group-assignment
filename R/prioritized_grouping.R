@@ -2,7 +2,7 @@ utils::globalVariables(c("group", "grp", "i", "j", "value"))
 
 #' Solve grouping based on priorities or costs.
 #'
-#' @param data data set in wide format. First column should bi ID, then one column
+#' @param data data set in wide format. First column should be ID, then one column
 #' for each group containing cost/priorities.
 #' @param cap_classes class capacity. Numeric vector length 1 or length=number
 #' of groups. If NULL equal group sizes are calculated. Default is NULL.
@@ -37,6 +37,11 @@ prioritized_grouping <-
       stop("Supplied data has to be a data frame, with each row
            are subjects and columns are groups, with the first column being
            subject identifiers")
+    }
+
+    # Converts tibble to data.frame
+    if ("tbl_df" %in% class(data)){
+      data <- as.data.frame(data)
     }
 
     ## This program very much trust the user to supply correctly formatted data
@@ -360,3 +365,4 @@ read_input <- function(file, consider.na = c("NA", '""', "")) {
 
   df
 }
+
