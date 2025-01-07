@@ -1,6 +1,6 @@
 Package: prioritized.grouping
 Title: Group allocation based on individual subject prioritization
-Version: 24.10.1
+Version: 25.1.1
 Authors@R: 
     person("Andreas Gammelgaard", "Damsbo", , "andreas@gdamsbo.dk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7559-1154"))
