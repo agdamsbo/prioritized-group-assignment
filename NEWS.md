@@ -2,6 +2,8 @@
 
 UI tweaks and first release to Zenodo.
 
+Added options to interpret Google and Microsoft forms data formats.
+
 ## Version 24.10.2
 
 Working to allow direct import of online form results
