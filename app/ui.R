@@ -101,8 +101,8 @@ ui <- bslib::page_sidebar(
         ".csv", ".xls", ".xlsx", ".ods"
       )
     ),
-    strong("Columns: ID, group1, group2, ... groupN."),
-    strong("NOTE: 0s will be interpreted as lowest score."),
+    # strong("Columns: ID, group1, group2, ... groupN."),
+    # strong("NOTE: 0s will be interpreted as lowest score."),
     # p("Cells should contain cost/priorities.
     #    Lowest score, for highest priority.
     #   Non-ranked should contain a number (eg lowest score+1).
