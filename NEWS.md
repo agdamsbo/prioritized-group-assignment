@@ -1,10 +1,10 @@
-## Version 25.1.1
+# Version 25.1.1
 
 UI tweaks and first release to Zenodo.
 
 Added options to interpret Google and Microsoft forms data formats.
 
-## Version 24.10.2
+# Version 24.10.2
 
 Working to allow direct import of online form results
 
@@ -18,7 +18,7 @@ Wish list of supported platforms:
 - REDCap Survey
 
 
-## Version 24.10.1
+# Version 24.10.1
 
 First proper public version. The package is mainly build for an easy to use 
 shiny-interface, but can as easily be used directly in *R* with the main 
